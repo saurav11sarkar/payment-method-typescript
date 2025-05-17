@@ -30,11 +30,11 @@ const createOrder = async (payload: IOrder, userContext: { userId: string }) => 
     total_amount: amount,
     currency: currency || "BDT",
     tran_id,
-    success_url: `http://localhost:5000/api/v1/orders/success/${tran_id}`,
-    fail_url: `http://localhost:5000/api/v1/orders/fail/${tran_id}`,
+    // success_url: `http://localhost:5000/api/v1/orders/success/${tran_id}`,
+    // fail_url: `http://localhost:5000/api/v1/orders/fail/${tran_id}`,
 
-    // success_url: `https://payment-server-weld.vercel.app/api/v1/orders/success/${tran_id}`,
-    // fail_url: `https://payment-server-weld.vercel.app/api/v1/orders/fail/${tran_id}`,
+    success_url: `https://payment-server-weld.vercel.app/api/v1/orders/success/${tran_id}`,
+    fail_url: `https://payment-server-weld.vercel.app/api/v1/orders/fail/${tran_id}`,
 
     cancel_url: "http://localhost:3030/cancel",
     ipn_url: "http://localhost:3030/ipn",
@@ -78,7 +78,8 @@ const successOrder = async (tran_id: string) => {
 
   const result = await Order.updateOne({ tranjectionId: tran_id }, { $set: { paidStatus: true } });
 
-  if (result.modifiedCount > 0) return `http://localhost:3000/success/${tran_id}`;
+  // if (result.modifiedCount > 0) return `http://localhost:3000/success/${tran_id}`;
+  if (result.modifiedCount > 0) return `https://payment-client.vercel.app/success/${tran_id}`;
   else throw new AppError(500, "Failed to update transaction.");
 };
 
@@ -88,7 +89,8 @@ const failOrder = async (tran_id: string) => {
 
   const result = await Order.deleteOne({ tranjectionId: tran_id });
 
-  if (result.deletedCount) return `http://localhost:3000/fail/${tran_id}`;
+  // if (result.deletedCount) return `http://localhost:3000/fail/${tran_id}`;
+  if (result.deletedCount) return `https://payment-client.vercel.app/fail/${tran_id}`;
   else throw new AppError(500, "Failed to delete transaction.");
 };
 
